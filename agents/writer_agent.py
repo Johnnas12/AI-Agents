@@ -20,3 +20,27 @@ class WriterAgent(Agent):
 
         report_text = response.candidates[0].content.parts[0].text
         return report_text
+    
+    def revise_document(self, document_text, fact_check_feedback):
+        print(f"[{self.name}] Revising document based on fact-check feedback ...")
+
+        genai.configure(api_key = self.api_key)
+        model = genai.GenerativeModel(self.model)
+ 
+        prompt = f"""You are an AI technical writer.
+
+            Here is your original document:
+            {document_text}
+
+            And here is a list of fact-check comments you need to address:
+            {fact_check_feedback}
+
+            Revise the document accordingly, making sure to fix any inaccuracies. Keep formatting clean. Return only the updated document text.
+            """
+        response = model.generate_content(prompt)
+        revised_document = response.candidates[0].content.parts[0].text
+
+        return revised_document
+            
+
+

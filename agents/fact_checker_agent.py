@@ -30,9 +30,3 @@ class FactCheckerAgent(Agent):
         fact_check_text = response.candidates[0].content.parts[0].text
         return fact_check_text
     
-    def revise_document(self, document_text, fact_check_feedback):
-        print(f"[{self.name}] Revising document based on fact-check feedback ...")
-
-        
-
-
