@@ -1,5 +1,6 @@
 from agent import Agent
 import google.generativeai as genai
+from docx import Document
 
 class WriterAgent(Agent):
     def run(self, research_text):
@@ -41,6 +42,14 @@ class WriterAgent(Agent):
         revised_document = response.candidates[0].content.parts[0].text
 
         return revised_document
-            
+    
+    def save_to_docx(self, document_text, filename):
+        print(f"[{self.name}] Saving document to {filename} ...")
+
+        doc = Document()
+        doc.add_heading('Technical Report', level=1)
+        doc.add_paragraph(document_text)
+        doc.save(filename)
+        print(f"[{self.name}] Document saved successfully.")
 
 

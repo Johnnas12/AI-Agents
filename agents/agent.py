@@ -17,6 +17,6 @@ class Agent:
 from agent import Agent
 from  config_loader  import load_config, get_model_config
 config = load_config()
-model_config = get_model_config(config, "gemini-1.5-pro")
-agent = Agent("TestAgent", model_config)
+model_config = get_model_config(config, "gemini-1.5-flash")
+agent = Agent("Researcher Agents", model_config)
 print(agent)
