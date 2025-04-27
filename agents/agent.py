@@ -1,6 +1,7 @@
 class Agent:
-    def __init__(self, name, model_config):
+    def __init__(self, name, db_manager, model_config):
         self.name = name
+        self.db_manager = db_manager
         self.model = model_config['model']
         self.api_key = model_config['api_key']
         self.api_type = model_config['api_type']
@@ -16,7 +17,9 @@ class Agent:
 #  Testing Examples if everything is working!
 from agent import Agent
 from  config_loader  import load_config, get_model_config
+from db_manager import DatabaseManager
 config = load_config()
+db_manager = DatabaseManager('agent_memory.db')
 model_config = get_model_config(config, "gemini-1.5-flash")
-agent = Agent("Researcher Agents", model_config)
+agent = Agent("Researcher Agents", db_manager, model_config)
 print(agent)

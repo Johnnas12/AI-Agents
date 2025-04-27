@@ -3,10 +3,10 @@ from datetime import datetime
 
 
 class DatabaseManager:
-    def __init__(self, db_name='agents_memory.db'):
+    def __init__(self, db_name='agent_memory.db'):
         self.db_name = db_name
-        self.connection = sqlite3.connect(self.db_name)
-        self.cursor = self.connection.cursor()
+        self.conn = sqlite3.connect(self.db_name)
+        self.cursor = self.conn.cursor()
 
     def create_tables(self):
         # Create the tables (if they don't already exist)

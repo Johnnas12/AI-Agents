@@ -3,8 +3,8 @@ import google.generativeai as genai
 from db_manager import DatabaseManager
 
 class ResearcherAgent(Agent):
-    def __init__(self, name, model_config):
-        super().__init__(name, model_config)
+    def __init__(self, name, db_manager, model_config):
+        super().__init__(name, db_manager, model_config)
         self.db_manager = DatabaseManager()
         self.db_manager.create_tables() 
 

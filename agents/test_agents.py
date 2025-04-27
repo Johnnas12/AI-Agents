@@ -2,16 +2,16 @@ from config_loader import load_config, get_model_config
 from researcher_agent import ResearcherAgent
 from writer_agent import WriterAgent
 from fact_checker_agent import FactCheckerAgent
+from db_manager import DatabaseManager
 
+db_manager = DatabaseManager('agents_memory.db')
 config = load_config("config.json")
 model_config = get_model_config(config, "gemini-1.5-pro")
 
 # Initialize the ResearcherAgent
-reseracher_agent = ResearcherAgent("Researcher", model_config)
-writer = WriterAgent("Writer", model_config)
-fact_checker = FactCheckerAgent("FactChecker", model_config)
-
-
+reseracher_agent = ResearcherAgent("Researcher", db_manager, model_config)
+writer = WriterAgent("Writer", db_manager, model_config)
+fact_checker = FactCheckerAgent("FactChecker", db_manager, model_config)
 
 print("\n[Research Output]:\n")
 result = reseracher_agent.run("Artificial Intelligence in Healthcare")
@@ -46,4 +46,39 @@ if current_round > max_round:
 writer.save_to_docx(document, "final_report.docx")
 
 
+stored_research = db_manager.get_context("research_text")
+stored_document = db_manager.get_context("document_text")
+stored_fact_check = db_manager.get_context("fact_check_text")
 
+print("\n📌 Stored Research Text:\n", stored_research)
+print("\n📌 Stored Document Text:\n", stored_document)
+print("\n📌 Stored Fact-Check Result:\n", stored_fact_check)
+
+
+while True:
+    user_input = input("\n👤 You: ")
+
+    if user_input.lower() in ["exit", "quit"]:
+        print("👋 Exiting session.")
+        break
+
+    if "previously" in user_input.lower() and "talking about" in user_input.lower():
+        # Retrieve stored context from DB
+        stored_research = db_manager.get_context("research_text")
+        stored_document = db_manager.get_context("document_text")
+        stored_fact_check = db_manager.get_context("fact_check_text")
+
+        if stored_research:
+            print("\n📝 Previously, we were discussing a research topic on:")
+            print(f"➡️ {stored_research[:300]}...")  
+            print("\n📝 The drafted document was about:")
+            print(f"➡️ {stored_document[:300]}...")
+
+            print("\n📝 Fact-checker's last feedback was:")
+            print(f"➡️ {stored_fact_check[:300]}...")
+
+        else:
+            print("\n⚠️ No previous conversation context found.")
+
+    else:
+        print("🤖 Sorry, I can only recall the last discussion if you ask 'previously what we were talking about'. Type 'exit' to quit.")
